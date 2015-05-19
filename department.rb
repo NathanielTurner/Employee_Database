@@ -6,7 +6,7 @@ ActiveRecord::Base.establish_connection(
 )
 
 
-class Department
+class Department < ActiveRecord::Base
 #  attr_reader :name, :employees
 #  def initialize(name)
 #    @name = name

@@ -6,7 +6,7 @@ ActiveRecord::Base.establish_connection(
 )
 
 
-class Employee
+class Employee < ActiveRecord::Base
   #attr_reader :name, :email, :number, :reviews, :performance
   #attr_accessor :salary
   #def initialize(name:, email:, number:, salary:)
