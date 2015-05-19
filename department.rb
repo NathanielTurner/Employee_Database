@@ -14,7 +14,7 @@ class Department < ActiveRecord::Base
 #  end
 
   def add_employee(*people)
-    people.map {|e| @employees << e}
+    people.map {|e| self.employees << e}
   end
 
   def salary
