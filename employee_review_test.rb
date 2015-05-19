@@ -74,10 +74,10 @@ class EmployeeReviewTest < Minitest::Test
     assert_equal true, employee_one.performance
     assert_equal false, employee_two.performance
   end
-#
+
   def test_can_give_raise_to_individual
-    Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)
-    Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 7500)
+    employee_one = Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)
+    employee_two = Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 7500)
     employee_one.give_raise(10)
     employee_two.give_raise(10)
     assert_equal 11000, employee_one.salary
