@@ -7,11 +7,11 @@ ActiveRecord::Base.establish_connection(
 
 
 class Department
-  attr_reader :name, :employees
-  def initialize(name)
-    @name = name
-    @employees = []
-  end
+#  attr_reader :name, :employees
+#  def initialize(name)
+#    @name = name
+#    @employees = []
+#  end
 
   def add_employee(*people)
     people.map {|e| @employees << e}

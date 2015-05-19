@@ -5,7 +5,7 @@ ActiveRecord::Base.establish_connection(
   database: 'db.sqlite3'
 )
 
-class DepartmensMigration < ActiveRecord::Migration
+class DepartmentsMigration < ActiveRecord::Migration
   def change
     create_table :departments do |t|
       t.string :name

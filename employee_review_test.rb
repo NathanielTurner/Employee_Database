@@ -3,14 +3,34 @@ require 'minitest/pride'
 require 'active_record'
 require './department.rb'
 require './employee.rb'
+require './departments_migration.rb'
+require './employees_migration.rb'
 
 ActiveRecord::Base.establish_connection(
   adapter:  'sqlite3',
   database: 'db.sqlite3'
 )
 
+ActiveRecord::Migration.verbose = false
 
 class EmployeeReviewTest < Minitest::Test
+
+  def setup
+    EmployeesMigration.migrate(:up)
+    DepartmentsMigration.migrate(:up)
+  end
+
+  def teardown
+    EmployeesMigration.migrate(:down)
+    DepartmentsMigration.migrate(:down)
+  end
+
+  def test_can_save_employees
+    Employee.create(name: "Nate")
+    assert_equal "Nate", Employee.last.name
+    assert_equal 1, Employee.count
+  end
+
   def test_department_can_initialize_with_name
     department = Department.new("R&D")
     assert_equal "R&D", department.name

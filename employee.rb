@@ -7,16 +7,16 @@ ActiveRecord::Base.establish_connection(
 
 
 class Employee
-  attr_reader :name, :email, :number, :reviews, :performance
-  attr_accessor :salary
-  def initialize(name:, email:, number:, salary:)
-    @name = name
-    @email = email
-    @number = number
-    @salary = salary
-    @reviews = []
-    @performance = nil
-  end
+  #attr_reader :name, :email, :number, :reviews, :performance
+  #attr_accessor :salary
+  #def initialize(name:, email:, number:, salary:)
+  #  @name = name
+  #  @email = email
+  #  @number = number
+  #  @salary = salary
+  #  @reviews = []
+  #  @performance = nil
+  #end
 
   def add_review(*reviews)
     reviews.map {|r| @reviews << r}
