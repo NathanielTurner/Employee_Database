@@ -1,8 +1,14 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-
+require 'active_record'
 require './department.rb'
 require './employee.rb'
+
+ActiveRecord::Base.establish_connection(
+  adapter:  'sqlite3',
+  database: 'db.sqlite3'
+)
+
 
 class EmployeeReviewTest < Minitest::Test
   def test_department_can_initialize_with_name
