@@ -16,7 +16,6 @@ class Employee
     @salary = salary
     @reviews = []
     @performance = nil
-    @responses = []
   end
 
   def add_review(*reviews)
