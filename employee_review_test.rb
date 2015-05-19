@@ -83,55 +83,55 @@ class EmployeeReviewTest < Minitest::Test
     assert_equal 11000, employee_one.salary
     assert_equal 8250, employee_two.salary
   end
+
+  def test_can_get_department_salary
+    department = Department.create(name: "R&D")
+    employee_one = Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)
+    employee_two = Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
+    department.add_employee(employee_one, employee_two)
+    assert_equal 20000, department.salary
+  end
 #
-#   def test_can_get_department_salary
-#     Department.create(name: "R&D")
-#     Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)
-#     Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
-#     department.add_employee(employee_one, employee_two)
-#     assert_equal 20000, department.salary
-#   end
+  def test_can_give_department_raise
+    department = Department.create(name: "R&D")
+    employee_one = Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 7000)
+    employee_two = Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
+    employee_three = Employee.create(name: "Joe Doe", email: "joedoe@janedoe.com", number: 1234567891, salary: 9000)
+    employee_one.evaluation(10)
+    employee_two.evaluation(5)
+    employee_three.evaluation(7)
+    department.add_employee(employee_one, employee_two, employee_three)
+    department.give_raise(500) do |e|
+      e.salary < 10000 && e.performance == true
+    end
+    assert_equal 7250, employee_one.salary
+    assert_equal 10000, employee_two.salary
+    assert_equal 9250, employee_three.salary
+  end
 #
-#   def test_can_give_department_raise
-#     department = Department.create("R&D")
-#     Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 7000)
-#     Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
-#     Employee.create(name: "Joe Doe", email: "joedoe@janedoe.com", number: 1234567891, salary: 9000)
-#     employee_one.evaluation(10)
-#     employee_two.evaluation(5)
-#     employee_three.evaluation(7)
-#     department.add_employee(employee_one, employee_two, employee_three)
-#     department.give_raise(500) do |e|
-#       e.salary < 10000 && e.performance == true
-#     end
-#     assert_equal 7250, employee_one.salary
-#     assert_equal 10000, employee_two.salary
-#     assert_equal 9250, employee_three.salary
-#   end
-#
-#   def test_complete
-#     Department.create(name: "R&D")
-#     Employee.create(name: "Zeke", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)
-#     Employee.create(name: "Wanda", email: "janedoe@janedoe.com", number: 1234567891, salary: 7500)
-#     employee_one.add_review("This guys is awesome.", "This guy is good.")
-#     employee_two.add_review("This girl sucks.", "This girl is no good.")
-#     employee_one.evaluation(10)
-#     employee_two.evaluation(5)
-#     department.add_employee(employee_one, employee_two)
-#     assert_equal 17500, department.salary
-#     assert_equal 10000, employee_one.salary
-#     assert_equal 7500, employee_two.salary
-#     employee_one.give_raise(10)
-#     employee_two.give_raise(10)
-#     assert_equal 11000, employee_one.salary
-#     assert_equal 8250, employee_two.salary
-#     department.give_raise(500) do |e|
-#       e.performance == true
-#     end
-#     assert_equal 19750, department.salary
-#     assert_equal 11500, employee_one.salary
-#     assert_equal 8250, employee_two.salary
-#   end
+  def test_complete
+    department = Department.create(name: "R&D")
+    employee_one = Employee.create(name: "Zeke", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)
+    employee_two = Employee.create(name: "Wanda", email: "janedoe@janedoe.com", number: 1234567891, salary: 7500)
+    # employee_one.add_review("This guys is awesome.", "This guy is good.")
+    # employee_two.add_review("This girl sucks.", "This girl is no good.")
+    employee_one.evaluation(10)
+    employee_two.evaluation(5)
+    department.add_employee(employee_one, employee_two)
+    assert_equal 17500, department.salary
+    assert_equal 10000, employee_one.salary
+    assert_equal 7500, employee_two.salary
+    employee_one.give_raise(10)
+    employee_two.give_raise(10)
+    assert_equal 11000, employee_one.salary
+    assert_equal 8250, employee_two.salary
+    department.give_raise(500) do |e|
+      e.performance == true
+    end
+    assert_equal 19750, department.salary
+    assert_equal 11500, employee_one.salary
+    assert_equal 8250, employee_two.salary
+  end
 #
 #   def test_review_evaluation
 #     Department.create("R&D")
