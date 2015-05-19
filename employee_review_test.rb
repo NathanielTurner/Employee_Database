@@ -3,8 +3,11 @@ require 'minitest/pride'
 require 'active_record'
 require './department.rb'
 require './employee.rb'
+require './review.rb'
 require './departments_migration.rb'
 require './employees_migration.rb'
+require './reviews_migration.rb'
+
 
 ActiveRecord::Base.establish_connection(
   adapter:  'sqlite3',
@@ -18,11 +21,19 @@ class EmployeeReviewTest < Minitest::Test
   def setup
     EmployeesMigration.migrate(:up)
     DepartmentsMigration.migrate(:up)
+    ReviewsMigration.migrate(:up)
   end
 
   def teardown
     EmployeesMigration.migrate(:down)
     DepartmentsMigration.migrate(:down)
+    ReviewsMigration.migrate(:down)
+  end
+
+  def test_can_save_reviews
+    Review.create(review: "This guy is awful.")
+    assert_equal 1, Review.count
+    assert_equal "This guy is awful.", Review.last.review
   end
 
   def test_can_save_employees
@@ -58,13 +69,15 @@ class EmployeeReviewTest < Minitest::Test
     assert_equal "janedoe@janedoe.com", department.employees.last.email
   end
 
-  # def test_can_add_review_text_to_employee
-  #   employee = Employee.create(name: "John Doe", email: "johndoe@johndoe.com",number: 1234567891, salary: 10000)
-  #   employee.add_review("This guy sucks.", "This guy is no good.")
-  #   assert_equal 2,employee.reviews.length
-  #   assert_equal "This guy sucks.", employee.reviews[0]
-  #   assert_equal "This guy is no good.", employee.reviews[1]
-  # end
+  def test_can_add_review_text_to_employee
+    employee = Employee.create(name: "John Doe", email: "johndoe@johndoe.com",number: 1234567891, salary: 10000)
+    review_one = Review.create(review: "This guy sucks.")
+    review_two = Review.create(review: "This guy is no good.")
+    employee.add_review(review_one, review_two)
+    assert_equal 2, employee.reviews.count
+    assert_equal "This guy sucks.", employee.reviews.first.review
+    assert_equal "This guy is no good.", employee.reviews.last.review
+  end
 
   def test_can_mark_employee_satisfactory_or_unsatisfactory
     employee_one = Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)
@@ -108,13 +121,14 @@ class EmployeeReviewTest < Minitest::Test
     assert_equal 10000, employee_two.salary
     assert_equal 9250, employee_three.salary
   end
-#
+
   def test_complete
     department = Department.create(name: "R&D")
     employee_one = Employee.create(name: "Zeke", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)
     employee_two = Employee.create(name: "Wanda", email: "janedoe@janedoe.com", number: 1234567891, salary: 7500)
-    # employee_one.add_review("This guys is awesome.", "This guy is good.")
-    # employee_two.add_review("This girl sucks.", "This girl is no good.")
+    review_one = Review.create(review: "This guy sucks.")
+    review_two = Review.create(review: "This guy is no good.")
+    employee_one.add_review(review_one, review_two)
     employee_one.evaluation(10)
     employee_two.evaluation(5)
     department.add_employee(employee_one, employee_two)
@@ -176,7 +190,7 @@ class EmployeeReviewTest < Minitest::Test
     employee_two = Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
     employee_three = Employee.create(name: "Bob Retter", email: "joedoe@janedoe.com", number: 1234567891, salary: 9000)
     department.add_employee(employee_one, employee_two, employee_three)
-    assert_equal [employee_three], department.find_palindrome
+    assert_equal [Employee.find(3)], department.find_palindrome
   end
 
   def test_can_tell_which_department_has_more_employees
@@ -190,7 +204,7 @@ class EmployeeReviewTest < Minitest::Test
     employee_six = Employee.create(name: "Joe Dee", email: "joedee@janedee.com", number: 1234567891, salary: 15000)
     department_one.add_employee(employee_one, employee_two, employee_three, employee_four)
     department_two.add_employee(employee_five, employee_six)
-    assert_equal department_one, department_one.most_employees
+    assert_equal Department.find(1), department_one.most_employees
   end
 
   def test_departments_can_merge
@@ -207,17 +221,36 @@ class EmployeeReviewTest < Minitest::Test
     department_two.merge(department_one)
     assert_equal 6, department_two.total_employees
   end
-#   def test_review_evaluation
-#     Department.create("R&D")
-#     Employee.create(name: "Zeke", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)
-#     Employee.create(name: "Wanda", email: "janedoe@janedoe.com", number: 1234567891, salary: 7500)
-#     department.add_employee(employee_one, employee_two)
-#     employee_one.split_reviews
-#     employee_two.split_reviews
-#     employee_one.evaluate_reviews
-#     employee_two.evaluate_reviews
-#     assert_equal false, employee_one.performance
-#     assert_equal true, employee_two.performance
-#   end
-#
+
+  def test_review_evaluation
+    department = Department.create(name: "R&D")
+    employee_one = Employee.create(name: "Zeke", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)
+    employee_two = Employee.create(name: "Wanda", email: "janedoe@janedoe.com", number: 1234567891, salary: 7500)
+    department.add_employee(employee_one, employee_two)
+    employee_one.split_reviews
+    employee_two.split_reviews
+    employee_one.evaluate_reviews
+    employee_two.evaluate_reviews
+    assert_equal false, employee_one.performance
+    assert_equal true, employee_two.performance
+  end
+
+  def test_cross_department_raise
+    department_one = Department.create(name: "R&D")
+    department_two = Department.create(name: "SectorX")
+    employee_one = Employee.create(name: "Zeke", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)
+    employee_two = Employee.create(name: "Wanda", email: "janedoe@janedoe.com", number: 1234567891, salary: 7000)
+    department_one.add_employee(employee_one)
+    department_two.add_employee(employee_two)
+    employee_one.split_reviews
+    employee_two.split_reviews
+    employee_one.evaluate_reviews
+    employee_two.evaluate_reviews
+    assert_equal false, Employee.find(1).performance
+    assert_equal true, Employee.find(2).performance
+    employee_one.performance_raise(10)
+    assert_equal 11000, employee_one.salary
+    assert_equal 7000, employee_two.salary
+  end
+
 end

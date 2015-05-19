@@ -14,7 +14,6 @@ class EmployeesMigration < ActiveRecord::Migration
       t.integer :salary
       t.boolean :performance
       t.integer :number
-      t.string :reviews
     end
   end
 end
