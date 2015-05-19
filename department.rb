@@ -21,4 +21,25 @@ class Department < ActiveRecord::Base
     good = self.employees.select {|e| yield(e)}
     good.each {|e| e.salary = e.salary + (num / good.length)}
   end
+
+  def total_employees
+    self.employees.count
+  end
+
+  def least_payed
+    self.employees.order(:salary).first
+  end
+
+  def sort_alphabetically
+    self.employees.order(:name)
+  end
+
+  def sort_above_average
+    avg = self.salary/self.employees.count
+    self.employees.select {|a| a.salary > avg}
+  end
+
+  def find_palindrome
+    self.employees.select
+  end
 end

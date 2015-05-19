@@ -132,7 +132,52 @@ class EmployeeReviewTest < Minitest::Test
     assert_equal 11500, employee_one.salary
     assert_equal 8250, employee_two.salary
   end
-#
+
+  def test_can_count_all_employees
+    department = Department.create(name: "R&D")
+    employee_one = Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 7000)
+    employee_two = Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
+    employee_three = Employee.create(name: "Joe Doe", email: "joedoe@janedoe.com", number: 1234567891, salary: 9000)
+    department.add_employee(employee_one, employee_two, employee_three)
+    assert_equal 3, department.total_employees
+  end
+
+  def test_can_tell_who_makes_the_least
+    department = Department.create(name: "R&D")
+    employee_one = Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 7000)
+    employee_two = Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
+    employee_three = Employee.create(name: "Joe Doe", email: "joedoe@janedoe.com", number: 1234567891, salary: 9000)
+    department.add_employee(employee_one, employee_two, employee_three)
+    assert_equal employee_one, department.least_payed
+  end
+
+  def test_can_order_employees_alphabetically
+    department = Department.create(name: "R&D")
+    employee_one = Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 7000)
+    employee_two = Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
+    employee_three = Employee.create(name: "Joe Doe", email: "joedoe@janedoe.com", number: 1234567891, salary: 9000)
+    department.add_employee(employee_one, employee_two, employee_three)
+    assert_equal employee_two, department.sort_alphabetically.first
+    assert_equal employee_one, department.sort_alphabetically.last
+  end
+
+  def test_can_tell_whose_above_average
+    department = Department.create(name: "R&D")
+    employee_one = Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 7000)
+    employee_two = Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
+    employee_three = Employee.create(name: "Joe Doe", email: "joedoe@janedoe.com", number: 1234567891, salary: 9000)
+    department.add_employee(employee_one, employee_two, employee_three)
+    assert_equal [employee_two, employee_three], department.sort_above_average
+  end
+
+  def test_can_find_palindrome_names
+    department = Department.create(name: "R&D")
+    employee_one = Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 7000)
+    employee_two = Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
+    employee_three = Employee.create(name: "Bob Retter", email: "joedoe@janedoe.com", number: 1234567891, salary: 9000)
+    department.add_employee(employee_one, employee_two, employee_three)
+    assert_equal employee_three, department.find_palindrome
+  end
 #   def test_review_evaluation
 #     Department.create("R&D")
 #     Employee.create(name: "Zeke", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)
