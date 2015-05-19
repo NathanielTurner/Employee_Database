@@ -178,6 +178,35 @@ class EmployeeReviewTest < Minitest::Test
     department.add_employee(employee_one, employee_two, employee_three)
     assert_equal [employee_three], department.find_palindrome
   end
+
+  def test_can_tell_which_department_has_more_employees
+    department_one = Department.create(name: "R&D")
+    department_two = Department.create(name: "SectorX")
+    employee_one = Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 7000)
+    employee_two = Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
+    employee_three = Employee.create(name: "Bob Retter", email: "joedoe@janedoe.com", number: 1234567891, salary: 9000)
+    employee_four = Employee.create(name: "John Dee", email: "johndee@johndee.com", number: 1234567891, salary: 90500)
+    employee_five = Employee.create(name: "Jane Dee", email: "janedee@janedee.com", number: 1234567891, salary: 10010)
+    employee_six = Employee.create(name: "Joe Dee", email: "joedee@janedee.com", number: 1234567891, salary: 15000)
+    department_one.add_employee(employee_one, employee_two, employee_three, employee_four)
+    department_two.add_employee(employee_five, employee_six)
+    assert_equal department_one, department_one.most_employees
+  end
+
+  def test_departments_can_merge
+    department_one = Department.create(name: "R&D")
+    department_two = Department.create(name: "SectorX")
+    employee_one = Employee.create(name: "John Doe", email: "johndoe@johndoe.com", number: 1234567891, salary: 7000)
+    employee_two = Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
+    employee_three = Employee.create(name: "Bob Retter", email: "joedoe@janedoe.com", number: 1234567891, salary: 9000)
+    employee_four = Employee.create(name: "John Dee", email: "johndee@johndee.com", number: 1234567891, salary: 90500)
+    employee_five = Employee.create(name: "Jane Dee", email: "janedee@janedee.com", number: 1234567891, salary: 10010)
+    employee_six = Employee.create(name: "Joe Dee", email: "joedee@janedee.com", number: 1234567891, salary: 15000)
+    department_one.add_employee(employee_one, employee_two, employee_three, employee_four)
+    department_two.add_employee(employee_five, employee_six)
+    department_two.merge(department_one)
+    assert_equal 6, department_two.total_employees
+  end
 #   def test_review_evaluation
 #     Department.create("R&D")
 #     Employee.create(name: "Zeke", email: "johndoe@johndoe.com", number: 1234567891, salary: 10000)

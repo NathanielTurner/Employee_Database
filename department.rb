@@ -42,4 +42,24 @@ class Department < ActiveRecord::Base
   def find_palindrome
     self.employees.select {|e| e.palidrome?}
   end
+
+  def most_employees
+    most = nil
+    count = 0
+    Department.all.each do |d|
+      if d.total_employees > count
+        most = d
+        count = d.total_employees
+      end
+    end
+    most
+  end
+
+  def merge(other)
+    other.employees.each do |a|
+      a.update(department_id: self.id)
+    end
+  end
+
+
 end
