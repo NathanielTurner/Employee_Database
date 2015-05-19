@@ -52,4 +52,11 @@ class Employee < ActiveRecord::Base
     reviews = File.open("./sample_reviews.txt").read.split(/POSITIVE REVIEW\s\d:|NEGATIVE REVIEW\s\d:/)
     @reviews << reviews[ reviews.index{ |r| r.include?(@name) } ].strip
   end
+
+  def palidrome?
+    first_name = self.name.split(" ")[0].downcase
+    if first_name == self.name.split(" ")[0].downcase.reverse
+      self
+    end
+  end
 end

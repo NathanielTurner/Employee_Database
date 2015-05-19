@@ -176,7 +176,7 @@ class EmployeeReviewTest < Minitest::Test
     employee_two = Employee.create(name: "Jane Doe", email: "janedoe@janedoe.com", number: 1234567891, salary: 10000)
     employee_three = Employee.create(name: "Bob Retter", email: "joedoe@janedoe.com", number: 1234567891, salary: 9000)
     department.add_employee(employee_one, employee_two, employee_three)
-    assert_equal employee_three, department.find_palindrome
+    assert_equal [employee_three], department.find_palindrome
   end
 #   def test_review_evaluation
 #     Department.create("R&D")

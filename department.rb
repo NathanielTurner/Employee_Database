@@ -40,6 +40,6 @@ class Department < ActiveRecord::Base
   end
 
   def find_palindrome
-    self.employees.select
+    self.employees.select {|e| e.palidrome?}
   end
 end
