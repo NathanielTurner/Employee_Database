@@ -44,8 +44,8 @@ class Employee < ActiveRecord::Base
   end
 
   def give_raise(number)
-    raise_amount = @salary / number
-    @salary = @salary + raise_amount
+    raise_amount = self.salary / number
+    self.salary += raise_amount
   end
 
   def split_reviews

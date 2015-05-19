@@ -14,11 +14,11 @@ class Department < ActiveRecord::Base
   end
 
   def salary
-    @employees.reduce(0) {|sum, e| sum + e.salary}
+    self.employees.reduce(0) {|sum, e| sum + e.salary}
   end
 
   def give_raise(num)
-    good = @employees.select {|e| yield(e)}
+    good = self.employees.select {|e| yield(e)}
     good.each {|e| e.salary = e.salary + (num / good.length)}
   end
 end
