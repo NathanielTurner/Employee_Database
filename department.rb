@@ -7,14 +7,10 @@ ActiveRecord::Base.establish_connection(
 
 
 class Department < ActiveRecord::Base
-#  attr_reader :name, :employees
-#  def initialize(name)
-#    @name = name
-#    @employees = []
-#  end
+  has_many :employees
 
   def add_employee(*people)
-    people.map {|e| self.employees << e}
+    people.map {|e| employees << e}
   end
 
   def salary

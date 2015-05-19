@@ -5,28 +5,18 @@ ActiveRecord::Base.establish_connection(
   database: 'db.sqlite3'
 )
 
-
 class Employee < ActiveRecord::Base
-  #attr_reader :name, :email, :number, :reviews, :performance
-  #attr_accessor :salary
-  #def initialize(name:, email:, number:, salary:)
-  #  @name = name
-  #  @email = email
-  #  @number = number
-  #  @salary = salary
-  #  @reviews = []
-  #  @performance = nil
-  #end
+  belongs_to :department
 
-  def add_review(*reviews)
-    reviews.map {|r| @reviews << r}
-  end
+  # def add_review(*reviews)
+  #   reviews.map {|r| @reviews << r}
+  # end
 
   def evaluation(number)
     if number >= 6
-      @performance = true
+      self.performance = true
     else
-      @performance = false
+      self.performance = false
     end
   end
 
